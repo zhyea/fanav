@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Favorites Navigator",
+  "version": "1.0",
+  "description": "Generate navigation page from Chrome bookmarks",
+  "permissions": [
+    "storage",
+    "windows",
+    "bookmarks"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon48.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["navigation.html", "styles.css", "navigation.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

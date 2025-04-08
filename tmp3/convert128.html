@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Convert to 128x128 PNG</title>
+</head>
+<body>
+    <canvas id="canvas" width="128" height="128" style="border:1px solid black;"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0, 128, 128);
+            // 右键点击canvas并选择"保存图片为"来保存为PNG
+        };
+        img.src = 'icon.svg';
+    </script>
+</body>
+</html>

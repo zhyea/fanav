@@ -3,25 +3,30 @@
 	"name": "Bookmark Navigator",
 	"version": "0.1",
 	"description": "Generate navigation page from Chrome bookmarks",
+
 	"permissions": [
 		"storage",
 		"windows",
 		"bookmarks",
 		"tabs"
 	],
+
 	"action": {
 		"default_icon": {
 			"48": "icons/icon48.png",
 			"128": "icons/icon128.png"
 		}
 	},
+
 	"background": {
 		"service_worker": "background.js"
 	},
+
 	"icons": {
 		"48": "icons/icon48.png",
 		"128": "icons/icon128.png"
 	},
+
 	"web_accessible_resources": [
 		{
 			"resources": [

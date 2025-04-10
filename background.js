@@ -2,10 +2,10 @@
 const storage = {
 	async saveBookmarkTags(bookmarkId, tags) {
 		try {
-			const data = await chrome.storage.local.get('bookmarkTags');
+			const data = await chrome.storage.sync.get('bookmarkTags');
 			const bookmarkTags = data.bookmarkTags || {};
 			bookmarkTags[bookmarkId] = tags;
-			await chrome.storage.local.set({bookmarkTags});
+			await chrome.storage.sync.set({bookmarkTags});
 			return true;
 		} catch (error) {
 			console.error('Error saving tags:', error);
@@ -15,7 +15,7 @@ const storage = {
 
 	async getBookmarkTags(bookmarkId) {
 		try {
-			const data = await chrome.storage.local.get('bookmarkTags');
+			const data = await chrome.storage.sync.get('bookmarkTags');
 			const bookmarkTags = data.bookmarkTags || {};
 			return bookmarkTags[bookmarkId] || [];
 		} catch (error) {
@@ -26,7 +26,7 @@ const storage = {
 
 	async getAllTags() {
 		try {
-			const data = await chrome.storage.local.get('bookmarkTags');
+			const data = await chrome.storage.sync.get('bookmarkTags');
 			const bookmarkTags = data.bookmarkTags || {};
 			const tagSet = new Set();
 			Object.values(bookmarkTags).forEach(tags => {

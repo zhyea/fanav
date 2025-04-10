@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function loadSettings() {
 	return new Promise((resolve) => {
 		try {
-			chrome.storage.local.get('appSettings', (result) => {
+			chrome.storage.sync.get('appSettings', (result) => {
 				if (result.appSettings) {
 					// 合并保存的设置和默认设置，确保所有必要的属性都存在
 					appSettings = {
@@ -245,7 +245,7 @@ function getDefaultFolderIcon() {
 // 保存所有设置
 function saveSettings() {
 	try {
-		chrome.storage.local.set({'appSettings': appSettings}, () => {
+		chrome.storage.sync.set({'appSettings': appSettings}, () => {
 			if (chrome.runtime.lastError) {
 				console.error('Error saving settings:', chrome.runtime.lastError);
 			} else {

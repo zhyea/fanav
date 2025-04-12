@@ -193,7 +193,7 @@ body {
 	margin-bottom: 0;
 }
 
-.settings-item label {
+.settings-item .common-label {
 	font-size: 14px;
 	color: var(--text-color);
 	min-width: 80px;
@@ -397,7 +397,7 @@ body.has-background::before {
 .toggle-label {
 	position: relative;
 	display: inline-block;
-	width: 40px; /* 还原宽度 */
+	width: 35px !important; /* 还原宽度 */
 	height: 20px; /* 还原高度 */
 	background-color: #e0e0e0;
 	border-radius: 8px;
@@ -428,16 +428,6 @@ body.has-background::before {
 	left: calc(100% - 18px);
 }
 
-.toggle-text {
-	font-size: 13px;
-	color: var(--text-color);
-	white-space: nowrap;
-	user-select: none;
-	flex-shrink: 0;
-	max-width: 80px; /* 还原文本宽度 */
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
 
 /* 响应式布局 */
 @media (max-width: 768px) {

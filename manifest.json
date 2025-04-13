@@ -34,6 +34,12 @@
 				"navigation.js",
 				"i18n/en.js",
 				"i18n/zh.js",
+				"i18n/zh-tw.js",
+				"i18n/ja.js",
+				"i18n/ko.js",
+				"i18n/fr.js",
+				"i18n/de.js",
+				"i18n/ar.js",
 				"i18n/i18n.js"
 			],
 			"matches": [

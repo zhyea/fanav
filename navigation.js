@@ -80,6 +80,14 @@ function applyTranslations() {
 	if (refreshButton) {
 		refreshButton.title = i18n.t('settings.background.refresh');
 	}
+
+	// 更新下拉菜单选项的翻译
+	document.querySelectorAll('option[data-i18n]').forEach(option => {
+		const translationKey = option.getAttribute('data-i18n');
+		if (translationKey) {
+			option.textContent = i18n.t(translationKey);
+		}
+	});
 }
 
 // 加载所有设置
@@ -279,17 +287,17 @@ async function fetchPexelsImage() {
 
 // 文件夹图标映射
 const FOLDER_ICONS = {
-	'未分类': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2H5V5c0-1.1.9-2 2-2z"/></svg>',
-	'常用': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
-	'工作': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.19 4H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.81-2-1.81-2zM20 18H4v-2.54c1.19-.69 2-1.99 2-3.46 0-1.48-.8-2.77-1.99-3.46L4 6h16v12z"/><path d="M17.73 13.3c.52-.27.27-1.03-.35-1.03h-1.48l-2.86-2.03h-2.37c-.41 0-.75.34-.75.75v4c0 .41.34.75.75.75h1.24l.92.5c.63.35 1.4.35 2.03 0l1.14-.62 1.73.94z"/></svg>',
-	'学习': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm3.79 13.21L12 13.42l-3.79 2.79 1.44-4.45-3.75-2.84 4.67-.04L12 4.48l1.43 4.4 4.67.04-3.75 2.84 1.44 4.45z"/></svg>',
-	'娱乐': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zm-6 0h5v5H6z"/></svg>',
-	'购物': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
-	'旅游': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.19 4H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.81-2-1.81-2zM20 18H4v-2.54c1.19-.69 2-1.99 2-3.46 0-1.48-.8-2.77-1.99-3.46L4 6h16v12z"/><path d="M17.73 13.3c.52-.27.27-1.03-.35-1.03h-1.48l-2.86-2.03h-2.37c-.41 0-.75.34-.75.75v4c0 .41.34.75.75.75h1.24l.92.5c.63.35 1.4.35 2.03 0l1.14-.62 1.73.94z"/></svg>',
-	'技术': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zm-6 0h5v5H6z"/></svg>',
-	'社交': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
-	'资源': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>',
-	'金融': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>'
+	'bookmarks.uncategorized': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2H5V5c0-1.1.9-2 2-2z"/></svg>',
+	'bookmarks.categories.common': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
+	'bookmarks.categories.work': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.19 4H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.81-2-1.81-2zM20 18H4v-2.54c1.19-.69 2-1.99 2-3.46 0-1.48-.8-2.77-1.99-3.46L4 6h16v12z"/><path d="M17.73 13.3c.52-.27.27-1.03-.35-1.03h-1.48l-2.86-2.03h-2.37c-.41 0-.75.34-.75.75v4c0 .41.34.75.75.75h1.24l.92.5c.63.35 1.4.35 2.03 0l1.14-.62 1.73.94z"/></svg>',
+	'bookmarks.categories.study': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm3.79 13.21L12 13.42l-3.79 2.79 1.44-4.45-3.75-2.84 4.67-.04L12 4.48l1.43 4.4 4.67.04-3.75 2.84 1.44 4.45z"/></svg>',
+	'bookmarks.categories.entertainment': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zm-6 0h5v5H6z"/></svg>',
+	'bookmarks.categories.shopping': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
+	'bookmarks.categories.travel': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.19 4H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.81-2-1.81-2zM20 18H4v-2.54c1.19-.69 2-1.99 2-3.46 0-1.48-.8-2.77-1.99-3.46L4 6h16v12z"/><path d="M17.73 13.3c.52-.27.27-1.03-.35-1.03h-1.48l-2.86-2.03h-2.37c-.41 0-.75.34-.75.75v4c0 .41.34.75.75.75h1.24l.92.5c.63.35 1.4.35 2.03 0l1.14-.62 1.73.94z"/></svg>',
+	'bookmarks.categories.tech': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zm-6 0h5v5H6z"/></svg>',
+	'bookmarks.categories.social': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>',
+	'bookmarks.categories.resources': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>',
+	'bookmarks.categories.finance': '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>'
 };
 
 // 获取默认文件夹图标
@@ -520,7 +528,7 @@ function processBookmarkBar(bookmarkBar, container) {
 	// 先渲染未分类书签（如果有的话）
 	if (uncategorizedBookmarks.length > 0) {
 		renderFolder({
-			title: '未分类',
+			title: i18n.t('bookmarks.uncategorized'),
 			children: uncategorizedBookmarks
 		}, container);
 	}
@@ -578,7 +586,7 @@ function renderFolder(folder, container) {
 	folderIcon.innerHTML = FOLDER_ICONS[folder.title] || getDefaultFolderIcon();
 
 	folderTitle.appendChild(folderIcon);
-	folderTitle.appendChild(document.createTextNode(folder.title));
+	folderTitle.appendChild(document.createTextNode(i18n.t(folder.title)));
 	folderElement.appendChild(folderTitle);
 
 	// 创建书签列表容器

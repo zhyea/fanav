@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Favorites Navigator</title>
+	<title>My Bookmarks Navigation</title>
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	<!-- Language files -->
 	<script type="module" src="i18n/i18n.js"></script>
@@ -39,22 +39,22 @@
 		<div class="settings-item">
 			<label class="common-label" id="settingWidthSelectLabel">布局宽度：</label>
 			<select id="widthSelect">
-				<option value="auto">自适应</option>
-				<option value="800">窄 (800px)</option>
-				<option value="1000">中 (1000px)</option>
-				<option value="1200" selected>宽 (1200px)</option>
-				<option value="1400">超宽 (1400px)</option>
+				<option value="auto" data-i18n="settings.width.auto"></option>
+				<option value="800" data-i18n="settings.width.narrow"></option>
+				<option value="1000" data-i18n="settings.width.medium"></option>
+				<option value="1200" selected data-i18n="settings.width.wide"></option>
+				<option value="1400" data-i18n="settings.width.extraWide"></option>
 			</select>
 		</div>
 		<div class="settings-item">
 			<label class="common-label" id="settingThemeSelectLabel">主题颜色：</label>
 			<select id="themeSelect">
-				<option value="original" selected>默认</option>
-				<option value="simple">简约</option>
-				<option value="fresh">清新</option>
-				<option value="deep">深邃</option>
-				<option value="vintage">古朴</option>
-				<option value="colorful">绚丽</option>
+				<option value="original" selected data-i18n="settings.theme.original"></option>
+				<option value="simple" data-i18n="settings.theme.simple"></option>
+				<option value="fresh" data-i18n="settings.theme.fresh"></option>
+				<option value="deep" data-i18n="settings.theme.deep"></option>
+				<option value="vintage" data-i18n="settings.theme.vintage"></option>
+				<option value="colorful" data-i18n="settings.theme.colorful"></option>
 			</select>
 		</div>
 		<div class="settings-item">

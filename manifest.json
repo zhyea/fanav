@@ -31,7 +31,10 @@
 			"resources": [
 				"navigation.html",
 				"styles.css",
-				"navigation.js"
+				"navigation.js",
+				"i18n/en.js",
+				"i18n/zh.js",
+				"i18n/i18n.js"
 			],
 			"matches": [
 				"<all_urls>"

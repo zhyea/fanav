@@ -10,7 +10,13 @@ let appSettings = {
 	}
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+	// 等待 i18n 初始化完成
+	await i18n.init();
+
+	// 应用初始翻译
+	applyTranslations();
+
 	// 首先加载设置，然后初始化页面
 	loadSettings().then(settings => {
 		// 应用加载的设置
@@ -26,6 +32,54 @@ document.addEventListener('DOMContentLoaded', () => {
 		setupSearch();
 	});
 });
+
+// 应用翻译到页面元素
+function applyTranslations() {
+	// 更新页面标题
+	document.title = i18n.t('bookmarks.title');
+
+	// 更新搜索框占位符
+	const searchInput = document.getElementById('searchInput');
+	if (searchInput) {
+		searchInput.placeholder = i18n.t('search.placeholder');
+	}
+
+	// 更新设置面板
+	const settingsTitle = document.querySelector('#settingsDrawer h2');
+	if (settingsTitle) {
+		settingsTitle.textContent = i18n.t('settings.title');
+	}
+
+	// 更新宽度设置
+	const widthLabel = document.querySelector('label[for="widthSelect"]');
+	if (widthLabel) {
+		widthLabel.textContent = i18n.t('settings.width.label');
+	}
+
+	// 更新主题设置
+	const themeLabel = document.querySelector('label[for="themeSelect"]');
+	if (themeLabel) {
+		themeLabel.textContent = i18n.t('settings.theme.label');
+	}
+
+	// 更新背景设置
+	const backgroundLabel = document.querySelector('label[for="backgroundEnabled"]');
+	if (backgroundLabel) {
+		backgroundLabel.textContent = i18n.t('settings.background.label');
+	}
+
+	// 更新保存按钮
+	const saveButton = document.getElementById('saveSettings');
+	if (saveButton) {
+		saveButton.textContent = i18n.t('settings.save');
+	}
+
+	// 更新刷新背景按钮的提示文本
+	const refreshButton = document.getElementById('refreshBackground');
+	if (refreshButton) {
+		refreshButton.title = i18n.t('settings.background.refresh');
+	}
+}
 
 // 加载所有设置
 function loadSettings() {
@@ -305,6 +359,9 @@ function setupSettings() {
 	const saveButton = document.getElementById('saveSettings');
 	const backgroundEnabled = document.getElementById('backgroundEnabled');
 	const refreshBackground = document.getElementById('refreshBackground');
+	const donateButton = document.getElementById('donateButton');
+	const donateModal = document.getElementById('donateModal');
+	const closeModal = document.querySelector('.close-modal');
 
 	if (!settingsButton || !settingsDrawer || !closeDrawer || !overlay) {
 		console.warn('Settings elements not found');
@@ -384,7 +441,7 @@ function setupSettings() {
 			// 显示保存成功提示
 			const successMessage = document.createElement('div');
 			successMessage.className = 'save-success';
-			successMessage.textContent = '设置已保存';
+			successMessage.textContent = i18n.t('settings.saveSuccess');
 			saveButton.parentNode.appendChild(successMessage);
 
 			// 2秒后移除提示
@@ -403,28 +460,75 @@ function setupSettings() {
 			fetchPexelsImage();
 		});
 	}
+
+	// 监听捐款按钮点击
+	if (donateButton && donateModal) {
+		donateButton.addEventListener('click', () => {
+			donateModal.classList.remove('hidden');
+			overlay.classList.remove('hidden');
+			setTimeout(() => {
+				overlay.classList.add('visible');
+			}, 10);
+		});
+	}
+
+	// 监听关闭模态框按钮点击
+	if (closeModal) {
+		closeModal.addEventListener('click', () => {
+			donateModal.classList.add('hidden');
+			overlay.classList.remove('visible');
+			setTimeout(() => {
+				overlay.classList.add('hidden');
+			}, 300);
+		});
+	}
+
+	// 点击遮罩层关闭模态框
+	overlay.addEventListener('click', () => {
+		if (!donateModal.classList.contains('hidden')) {
+			donateModal.classList.add('hidden');
+			overlay.classList.remove('visible');
+			setTimeout(() => {
+				overlay.classList.add('hidden');
+			}, 300);
+		}
+	});
+
+	// 按ESC键关闭抽屉和模态框
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') {
+			closeSettingsDrawer();
+			if (donateModal && !donateModal.classList.contains('hidden')) {
+				donateModal.classList.add('hidden');
+				overlay.classList.remove('visible');
+				setTimeout(() => {
+					overlay.classList.add('hidden');
+				}, 300);
+			}
+		}
+	});
 }
 
 function loadBookmarks() {
 	chrome.runtime.sendMessage({action: 'getBookmarks'}, (response) => {
 		if (!response) {
-			showError('无法获取书签数据，请重新加载页面');
+			showError('bookmarks.error.loading');
 			return;
 		}
 
 		if (chrome.runtime.lastError) {
-			showError('Chrome运行时错误：' + chrome.runtime.lastError.message);
+			showError('bookmarks.error.chrome_runtime', chrome.runtime.lastError.message);
 			return;
 		}
 
 		if (!response.bookmarks || !Array.isArray(response.bookmarks)) {
-			showError('书签数据格式错误，请重新加载页面');
+			showError('bookmarks.error.invalid_format');
 			return;
 		}
 
 		const container = document.getElementById('bookmarksContainer');
 		if (!container) {
-			showError('找不到书签容器元素');
+			showError('bookmarks.error.container_not_found');
 			return;
 		}
 
@@ -497,12 +601,12 @@ function collectBookmarksRecursively(node) {
 	return bookmarks;
 }
 
-function showError(message) {
+function showError(messageKey, ...args) {
 	const container = document.getElementById('bookmarksContainer');
 	if (container) {
 		const errorDiv = document.createElement('div');
 		errorDiv.className = 'error-message';
-		errorDiv.textContent = message;
+		errorDiv.textContent = i18n.t(messageKey, ...args);
 		container.innerHTML = '';
 		container.appendChild(errorDiv);
 	}

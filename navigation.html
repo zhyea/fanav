@@ -4,13 +4,15 @@
 	<meta charset="UTF-8">
 	<title>Favorites Navigator</title>
 	<link rel="stylesheet" type="text/css" href="styles.css">
+	<!-- Language files -->
+	<script type="module" src="i18n/i18n.js"></script>
 </head>
 <body class="theme-simple">
 <div class="nav-container">
 	<h1>My Bookmarks Navigation</h1>
 	<div class="search-box">
 		<div class="search-container">
-			<input type="text" id="searchInput" placeholder="Search bookmarks...">
+			<input type="text" id="searchInput" placeholder="Search bookmarks..." />
 			<button id="settingsButton" class="settings-button" title="设置">
 				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
 					<path d="M15.95 10.78c.03-.25.05-.51.05-.78s-.02-.53-.06-.78l1.69-1.32c.15-.12.19-.34.1-.51l-1.6-2.77c-.1-.18-.31-.24-.49-.18l-1.99.8c-.42-.32-.86-.58-1.35-.78L12 2.34c-.03-.2-.2-.34-.4-.34H7.6c-.2 0-.36.14-.39.34l-.3 2.12c-.49.2-.94.47-1.35.78l-1.99-.8c-.18-.07-.39 0-.49.18l-1.6 2.77c-.1.18-.06.39.1.51l1.69 1.32c-.04.25-.07.52-.07.78s.02.53.06.78L2.37 12.1c-.15.12-.19.34-.1.51l1.6 2.77c.1.18.31.24.49.18l1.99-.8c.42.32.86.58 1.35.78l.3 2.12c.04.2.2.34.4.34h3.2c.2 0 .37-.14.39-.34l.3-2.12c.49-.2.94-.47 1.35-.78l1.99.8c.18.07.39 0 .49-.18l1.6-2.77c.1-.18.06-.39-.1-.51l-1.67-1.32zM10 13c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/>
@@ -65,6 +67,12 @@
 		</div>
 		<div class="settings-action">
 			<button id="saveSettings" class="save-button">保存设置</button>
+			<button id="donateButton" class="donate-button">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;">
+					<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+				</svg>
+				支持作者
+			</button>
 		</div>
 	</div>
 	<!-- 风车刷新按钮 -->
@@ -75,9 +83,45 @@
 	</button>
 </div>
 
+<!-- 捐款弹窗 -->
+<div id="donateModal" class="modal hidden">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h3>支持作者</h3>
+			<button class="close-modal">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+					<path d="M10 8.586L14.293 4.293 15.707 5.707 11.414 10 15.707 14.293 14.293 15.707 10 11.414 5.707 15.707 4.293 14.293 8.586 10 4.293 5.707 5.707 4.293 10 8.586z"/>
+				</svg>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>如果您觉得这个插件有帮助，可以考虑支持一下作者 ❤️</p>
+			<div class="qr-codes">
+				<div class="qr-code">
+					<img src="images/wechat-pay.png" alt="微信支付" id="wechatQR" />
+					<span>微信支付</span>
+				</div>
+				<div class="qr-code">
+					<img src="images/alipay.png" alt="支付宝" id="alipayQR" />
+					<span>支付宝</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- 遮罩层 -->
 <div id="overlay" class="overlay hidden"></div>
 
-<script src="navigation.js"></script>
+<script type="module">
+// 导入 i18n 实例
+import { i18n } from './i18n/i18n.js';
+
+// 初始化 i18n
+await i18n.init();
+
+// 导入并初始化导航脚本
+import './navigation.js';
+</script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-
 // 常见的停用词
 const commonWords = [
 	'the', 'be', 'to', 'of', 'and', 'that', 'have', 'with', 'this', 'from',
@@ -7,22 +6,6 @@ const commonWords = [
 	'could', 'them', 'than', 'then', 'look', 'only', 'come', 'over', 'think'
 ];
 
-// 将书签树展平为数组
-function flattenBookmarks(nodes) {
-	const bookmarks = [];
-
-	function traverse(node) {
-		if (node.url) {
-			bookmarks.push(node);
-		}
-		if (node.children) {
-			node.children.forEach(traverse);
-		}
-	}
-
-	nodes.forEach(traverse);
-	return bookmarks;
-}
 
 // 监听消息
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -33,10 +16,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 				const bookmarkTreeNodes = await new Promise((resolve) => {
 					chrome.bookmarks.getTree((nodes) => resolve(nodes));
 				});
-
-				// 获取所有书签
-				const flatBookmarks = flattenBookmarks(bookmarkTreeNodes);
-				console.log('Flattened bookmarks:', flatBookmarks.length);
 
 				sendResponse({
 					bookmarks: bookmarkTreeNodes,
@@ -53,5 +32,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 chrome.action.onClicked.addListener(() => {
-	chrome.tabs.create({url: 'navigation.html'});
+	chrome.tabs.create({url: 'navigation.html'}).then(r => console.log('load nav page...'));
 });

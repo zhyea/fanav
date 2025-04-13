@@ -196,7 +196,7 @@ body {
 .settings-item .common-label {
 	font-size: 14px;
 	color: var(--text-color);
-	min-width: 80px;
+	min-width: 100px;
 	transition: color var(--transition-time) ease;
 }
 

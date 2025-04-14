@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Bookmark Navigator",
 	"version": "0.1",
-	"description": "Generate navigation page from Chrome bookmarks",
+	"description": "Generate navigation page from Explore bookmarks",
 
 	"permissions": [
 		"storage",

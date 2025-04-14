@@ -1,0 +1,18 @@
+Bookmark Navigator transforms your browser bookmarks into a beautiful, customizable navigation page.
+
+Key Features:
+- Organizes bookmarks by folder structure
+- Real-time search across all bookmarks
+- Multiple theme options (light/dark/custom)
+- Background image customization
+- Multi-language support (English, Chinese, Japanese, etc.)
+- Right-to-Left (RTL) support for Arabic
+- Fast and lightweight
+
+Perfect for users with many bookmarks who want quick access in an elegant interface. All processing happens locally - your bookmark data never leaves your browser.
+
+Version 0.1 includes:
+- Basic folder navigation
+- Search functionality
+- Theme customization
+- Multi-language UI

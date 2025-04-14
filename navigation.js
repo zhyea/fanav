@@ -468,6 +468,7 @@ function setupSettings() {
 	}
 }
 
+// 加载书签
 function loadBookmarks() {
 	chrome.runtime.sendMessage({action: 'getBookmarks'}, (response) => {
 		if (!response) {

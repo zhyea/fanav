@@ -6,15 +6,17 @@ const commonWords = [
 	'could', 'them', 'than', 'then', 'look', 'only', 'come', 'over', 'think'
 ];
 
+// 统一浏览器API
+const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
 
 // 监听消息
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browserAPI.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if (request.action === 'getBookmarks') {
 		// 使用 Promise.all 处理所有异步操作
 		(async () => {
 			try {
 				const bookmarkTreeNodes = await new Promise((resolve) => {
-					chrome.bookmarks.getTree((nodes) => resolve(nodes));
+					browserAPI.bookmarks.getTree((nodes) => resolve(nodes));
 				});
 
 				sendResponse({
@@ -31,6 +33,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	}
 });
 
-chrome.action.onClicked.addListener(() => {
-	chrome.tabs.create({url: 'navigation.html'}).then(r => console.log('load nav page...'));
+browserAPI.action.onClicked.addListener(() => {
+	browserAPI.tabs.create({url: 'navigation.html'}).then(r => console.log('load nav page...'));
 });

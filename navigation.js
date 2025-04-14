@@ -1,6 +1,9 @@
 // 导入 i18n 实例
 import { i18n } from './i18n/i18n.js';
 
+// 统一浏览器API
+const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
+
 // 全局设置对象
 let appSettings = {
 	width: 'auto',
@@ -94,7 +97,7 @@ function applyTranslations() {
 function loadSettings() {
 	return new Promise((resolve) => {
 		try {
-			chrome.storage.sync.get('appSettings', (result) => {
+			browserAPI.storage.sync.get('appSettings', (result) => {
 				if (result.appSettings) {
 					// 合并保存的设置和默认设置，确保所有必要的属性都存在
 					appSettings = {
@@ -308,9 +311,9 @@ function getDefaultFolderIcon() {
 // 保存所有设置
 function saveSettings() {
 	try {
-		chrome.storage.sync.set({'appSettings': appSettings}, () => {
-			if (chrome.runtime.lastError) {
-				console.error('Error saving settings:', chrome.runtime.lastError);
+		browserAPI.storage.sync.set({'appSettings': appSettings}, () => {
+			if (browserAPI.runtime.lastError) {
+				console.error('Error saving settings:', browserAPI.runtime.lastError);
 			} else {
 				console.log('Settings saved successfully:', appSettings);
 			}
@@ -469,14 +472,14 @@ function setupSettings() {
 }
 
 function loadBookmarks() {
-	chrome.runtime.sendMessage({action: 'getBookmarks'}, (response) => {
+	browserAPI.runtime.sendMessage({action: 'getBookmarks'}, (response) => {
 		if (!response) {
 			showError('bookmarks.error.loading');
 			return;
 		}
 
-		if (chrome.runtime.lastError) {
-			showError('bookmarks.error.chrome_runtime', chrome.runtime.lastError.message);
+		if (browserAPI.runtime.lastError) {
+			showError('bookmarks.error.chrome_runtime', browserAPI.runtime.lastError.message);
 			return;
 		}
 

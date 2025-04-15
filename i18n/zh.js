@@ -30,7 +30,8 @@ export const zh = {
 			refresh: '刷新背景图片'
 		},
 		save: '保存设置',
-		saved: '设置已保存'
+		saved: '设置已保存',
+		saveSuccess: '设置保存成功！'
 	},
 	search: {
 		placeholder: '搜索书签...'

@@ -24,7 +24,8 @@ export const ja = {
 			refresh: '背景画像を更新'
 		},
 		save: '設定を保存',
-		saved: '設定が保存されました'
+		saved: '設定が保存されました',
+		saveSuccess: '設定が正常に保存されました！'
 	},
 	search: {
 		placeholder: 'ブックマークを検索...'

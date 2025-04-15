@@ -1,5 +1,5 @@
 // 导入 i18n 实例
-import { i18n } from './i18n/i18n.js';
+import {i18n} from './i18n/i18n.js';
 
 // 统一浏览器API
 const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// 首先加载设置，然后初始化页面
 	loadSettings().then(settings => {
+		
 		// 应用加载的设置
 		applySettings(settings);
 
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		setupSearch();
 	});
 });
+
 
 // 应用翻译到页面元素
 function applyTranslations() {
@@ -109,7 +111,7 @@ function loadSettings() {
 							...(result.appSettings.background || {})
 						}
 					};
-					console.log('Settings loaded:', appSettings);
+					console.debug('Settings loaded:', appSettings);
 				} else {
 					console.log('No saved settings found, using defaults');
 				}
@@ -315,7 +317,7 @@ function saveSettings() {
 			if (browserAPI.runtime.lastError) {
 				console.error('Error saving settings:', browserAPI.runtime.lastError);
 			} else {
-				console.log('Settings saved successfully:', appSettings);
+				console.info('Settings saved successfully:', appSettings);
 			}
 		});
 	} catch (error) {
@@ -433,7 +435,9 @@ function setupSettings() {
 
 			if (e.target.checked && !appSettings.background.url) {
 				// 如果启用背景但没有背景图，立即加载一张
-				fetchPexelsImage();
+				fetchPexelsImage().then(e => {
+					console.log('Background image loaded:', e);
+				});
 			} else {
 				// 应用当前设置
 				setBackground(appSettings.background.enabled, appSettings.background.url);
@@ -466,122 +470,123 @@ function setupSettings() {
 	// 监听刷新背景按钮点击
 	if (refreshBackground) {
 		refreshBackground.addEventListener('click', () => {
-			fetchPexelsImage();
+			fetchPexelsImage().then(e => {
+				console.log('Background image loaded:', e);
+			});
 		});
 	}
 }
 
 function loadBookmarks() {
-    // 直接使用browserAPI获取书签
-    browserAPI.bookmarks.getTree().then(bookmarks => {
-        const container = document.getElementById('bookmarksContainer');
-        if (!container) {
-            showError('bookmarks.error.container_not_found');
-            return;
-        }
+	// 直接使用browserAPI获取书签
+	browserAPI.bookmarks.getTree().then(nodes => {
+		const container = document.getElementById('bookmarksContainer');
+		if (!container) {
+			showError('bookmarks.error.container_not_found');
+			return;
+		}
 
-        container.innerHTML = '';
+		container.innerHTML = '';
 
-        const bookmarkBar = findBookmarkBar(bookmarks[0]);
-        if (bookmarkBar) {
-            processBookmarkBar(bookmarkBar, container);
-        } else {
-            showError('bookmarks.error.no_bookmarks_bar');
-        }
-    }).catch(error => {
-        console.error('Error loading bookmarks:', error);
-        showError('bookmarks.error.loading');
-    });
+		const bookmarkBar = findBookmarkBar(nodes[0]);
+
+		if (bookmarkBar) {
+			processBookmarkBar(bookmarkBar, container);
+		} else {
+			showError('bookmarks.error.no_bookmarks_bar');
+		}
+	}).catch(error => {
+		console.error('Error loading bookmarks:', error);
+		showError('bookmarks.error.loading');
+	});
 }
 
 function findBookmarkBar(root) {
-    if (!root || !root.children) return null;
+	if (!root || !root.children) return null;
 
-    // Firefox中书签工具栏的id是'toolbar_____'
-    // Chrome中书签栏的id是'1'
-    return root.children.find(child => 
-        child.id === 'toolbar_____' || // Firefox
-        child.id === '1' || // Chrome
-        child.title === 'Bookmarks Toolbar' || // Firefox英文
-        child.title === '书签工具栏' // Firefox中文
-    );
+	const nodes = [];
+	for (const child of root.children) {
+		if (child.id === 'toolbar_____' || // Firefox
+			child.id === '1' || // Chrome
+			child.id === 'unfiled_____' || // 其他书签
+			child.id === 'mobile_____' || // 其他书签
+			child.id === 'menum_____' || // 其他书签
+			child.title === 'Bookmarks Toolbar' || // Firefox英文
+			child.title === '书签工具栏' // Firefox中文
+		) {
+			nodes.push(child)
+		}
+	}
+
+	return nodes;
 }
 
 function processBookmarkBar(bookmarkBar, container) {
-    if (!bookmarkBar || !bookmarkBar.children) return;
+	if (!bookmarkBar) return;
 
-    const uncategorizedBookmarks = [];
-    const folders = [];
+	const uncategorizedBookmarks = [];
+	const folders = [];
 
-    // 第一遍遍历：收集未分类书签和文件夹
-    bookmarkBar.children.forEach(item => {
-        if (item.type === 'bookmark' || item.url) {
-            // 直接在书签栏下的链接归为未分类
-            uncategorizedBookmarks.push(item);
-        } else if (item.type === 'folder' || (!item.url && item.children)) {
-            folders.push(item);
-        }
-    });
+	// 第一遍遍历：收集未分类书签和文件夹
+	bookmarkBar.forEach(
+		node => {
+			if (!node.children) {
+				return;
+			}
+			node.children.forEach(item => {
+				if (item.type === 'bookmark') {
+					// 直接在书签栏下的链接归为未分类
+					uncategorizedBookmarks.push(item);
+				} else if (item.type === 'folder' || (!item.url && item.children)) {
+					folders.push(item);
+				}
+			})
+		}
+	);
 
-    // 先渲染未分类书签（如果有的话）
-    if (uncategorizedBookmarks.length > 0) {
-        renderFolder({
-            title: i18n.t('bookmarks.uncategorized'),
-            children: uncategorizedBookmarks
-        }, container);
-    }
+	// 先渲染未分类书签（如果有的话）
+	if (uncategorizedBookmarks.length > 0) {
+		renderFolder({
+			title: i18n.t('bookmarks.uncategorized'),
+			children: uncategorizedBookmarks
+		}, container);
+	}
 
-    // 渲染每个文件夹
-    folders.forEach(folder => {
-        processFolder(folder, container);
-    });
+	// 渲染每个文件夹
+	folders.forEach(folder => {
+		processFolder(folder, container);
+	});
 }
 
 function processFolder(folder, container) {
-    const folderBookmarks = [];
-    const subFolders = [];
+	const folderBookmarks = [];
+	const subFolders = [];
 
-    // 处理文件夹中的内容
-    if (folder.children) {
-        folder.children.forEach(item => {
-            if (item.type === 'bookmark' || item.url) {
-                folderBookmarks.push(item);
-            } else if (item.type === 'folder' || (!item.url && item.children)) {
-                subFolders.push(item);
-            }
-        });
-    }
+	// 处理文件夹中的内容
+	if (folder.children) {
+		folder.children.forEach(item => {
+			if (item.type === 'bookmark' || item.url) {
+				folderBookmarks.push(item);
+			} else if (item.type === 'folder' || (!item.url && item.children)) {
+				subFolders.push(item);
+			}
+		});
+	}
 
-    // 渲染当前文件夹的书签
-    if (folderBookmarks.length > 0) {
-        renderFolder({
-            title: folder.title,
-            children: folderBookmarks
-        }, container);
-    }
+	// 渲染当前文件夹的书签
+	if (folderBookmarks.length > 0) {
+		renderFolder({
+			title: folder.title,
+			children: folderBookmarks
+		}, container);
+	}
 
-    // 递归处理子文件夹
-    subFolders.forEach(subFolder => {
-        processFolder(subFolder, container);
-    });
+	// 递归处理子文件夹
+	subFolders.forEach(subFolder => {
+		processFolder(subFolder, container);
+	});
 }
 
-function collectBookmarksRecursively(node) {
-    const bookmarks = [];
-
-    function collect(item) {
-        if (item.type === 'bookmark' || item.url) {
-            bookmarks.push(item);
-        } else if (item.type === 'folder' || (!item.url && item.children)) {
-            if (item.children) {
-                item.children.forEach(collect);
-            }
-        }
-    }
-
-    collect(node);
-    return bookmarks;
-}
 
 function showError(messageKey, ...args) {
 	const container = document.getElementById('bookmarksContainer');

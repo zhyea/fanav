@@ -24,7 +24,8 @@ export const zhTW = {
 			refresh: '重新整理背景圖片'
 		},
 		save: '儲存設定',
-		saved: '設定已儲存'
+		saved: '設定已儲存',
+		saveSuccess: '設定儲存成功！'
 	},
 	search: {
 		placeholder: '搜尋書籤...'

@@ -24,7 +24,8 @@ export const de = {
 			refresh: 'Hintergrundbild aktualisieren'
 		},
 		save: 'Einstellungen speichern',
-		saved: 'Einstellungen gespeichert'
+		saved: 'Einstellungen gespeichert',
+		saveSuccess: 'Einstellungen erfolgreich gespeichert!'
 	},
 	search: {
 		placeholder: 'Lesezeichen durchsuchen...'

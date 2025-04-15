@@ -23,8 +23,9 @@ export const fr = {
 			enable: "Activer l'image de fond",
 			refresh: "Actualiser l'image de fond"
 		},
-		save: 'Enregistrer',
-		saved: 'Paramètres enregistrés'
+		save: 'Enregistrer les paramètres',
+		saved: 'Paramètres enregistrés',
+		saveSuccess: 'Paramètres enregistrés avec succès !'
 	},
 	search: {
 		placeholder: 'Rechercher des signets...'

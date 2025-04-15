@@ -24,7 +24,8 @@ export const ko = {
 			refresh: '배경 이미지 새로고침'
 		},
 		save: '설정 저장',
-		saved: '설정이 저장되었습니다'
+		saved: '설정이 저장되었습니다',
+		saveSuccess: '설정이 성공적으로 저장되었습니다!'
 	},
 	search: {
 		placeholder: '북마크 검색...'

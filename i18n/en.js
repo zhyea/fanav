@@ -30,7 +30,8 @@ export const en = {
 			refresh: 'Refresh Background'
 		},
 		save: 'Save Settings',
-		saved: 'Settings Saved'
+		saved: 'Settings Saved',
+		saveSuccess: 'Settings saved successfully!'
 	},
 	search: {
 		placeholder: 'Search bookmarks...'

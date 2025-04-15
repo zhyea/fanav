@@ -14,10 +14,10 @@
     "storage",
     "bookmarks",
     "tabs",
-    "<all_urls>"  // Firefox需要显式声明web_accessible_resources的URL匹配
+    "<all_urls>"
   ],
 
-  "action": {
+  "browser_action": {
     "default_icon": {
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
@@ -25,7 +25,7 @@
   },
 
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"]
   },
 
   "icons": {

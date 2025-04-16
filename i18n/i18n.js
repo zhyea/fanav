@@ -12,6 +12,8 @@ export class I18n {
 		const browserLang = navigator.language.toLowerCase();
 		const baseLang = browserLang.split('-')[0];
 
+		console.log('Browser Lang', browserLang)
+
 		// 优先匹配完整的语言代码（如 zh-tw），如果没有则匹配基础语言代码（如 zh）
 		this.currentLocale = this.supportedLocales.includes(browserLang) ? browserLang :
 			this.supportedLocales.includes(baseLang) ? baseLang : 'en';
@@ -34,10 +36,15 @@ export class I18n {
 
 			// 如果当前语言不是英文，加载对应的翻译
 			if (this.currentLocale !== 'en') {
-				// 处理特殊的语言代码（如 zh-tw）
-				const fileName = this.currentLocale.replace('-', '');
-				const module = await import(`./${this.currentLocale}.js`);
-				this.translations[this.currentLocale] = module[fileName];
+				// 仅允许受支持的语言代码进行导入和属性访问
+				if (this.supportedLocales.includes(this.currentLocale)) {
+					const fileName = this.currentLocale.replace('-', '');
+					const module = await import(`./${this.currentLocale}.js`);
+					this.translations[this.currentLocale] = module[fileName];
+				} else {
+					console.warn(`Unsupported locale: ${this.currentLocale}, falling back to English.`);
+					this.currentLocale = 'en';
+				}
 			}
 		} catch (error) {
 			console.error(`Failed to load translations for ${this.currentLocale}:`, error);

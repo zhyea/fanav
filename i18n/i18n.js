@@ -5,17 +5,28 @@ export class I18n {
 		this.fallbackLocale = 'en';
 		this.supportedLocales = ['en', 'zh', 'zh-tw', 'ja', 'ko', 'fr', 'de', 'ar'];
 		this.rtlLocales = ['ar']; // 从右到左书写的语言
+		this.localeModuleMap = {
+			'en': 'en',
+			'zh': 'zh',
+			'zh-tw': 'zhtw',
+			'ja': 'ja',
+			'ko': 'ko',
+			'fr': 'fr',
+			'de': 'de',
+			'ar': 'ar'
+		};
 	}
 
 	async init() {
 		// 获取浏览器语言，支持带地区的语言代码（如 zh-TW）
-		const browserLang = navigator.language.toLowerCase();
-		const baseLang = browserLang.split('-')[0];
+		const uiLang = chrome.i18n.getUILanguage().toLowerCase();
+		//const browserLang = navigator.language.toLowerCase();
+		const baseLang = uiLang.split('-')[0];
 
-		console.log('Browser Lang', browserLang)
+		console.log('Browser Lang', uiLang)
 
 		// 优先匹配完整的语言代码（如 zh-tw），如果没有则匹配基础语言代码（如 zh）
-		this.currentLocale = this.supportedLocales.includes(browserLang) ? browserLang :
+		this.currentLocale = this.supportedLocales.includes(uiLang) ? uiLang :
 			this.supportedLocales.includes(baseLang) ? baseLang : 'en';
 
 		// 加载语言文件
@@ -37,10 +48,17 @@ export class I18n {
 			// 如果当前语言不是英文，加载对应的翻译
 			if (this.currentLocale !== 'en') {
 				// 仅允许受支持的语言代码进行导入和属性访问
-				if (this.supportedLocales.includes(this.currentLocale)) {
-					const fileName = this.currentLocale.replace('-', '');
+				const moduleVar = this.localeModuleMap[this.currentLocale];
+				if (moduleVar) {
 					const module = await import(`./${this.currentLocale}.js`);
-					this.translations[this.currentLocale] = module[fileName];
+					// 安全地检查模块是否导出了所需的属性
+					if (Object.prototype.hasOwnProperty.call(module, moduleVar) && module[moduleVar]) {
+						// 使用安全的方式赋值
+						this.translations[this.currentLocale] = Object.assign({}, module[moduleVar]);
+					} else {
+						console.warn(`Module for ${this.currentLocale} does not export ${moduleVar}, falling back to English.`);
+						this.currentLocale = 'en';
+					}
 				} else {
 					console.warn(`Unsupported locale: ${this.currentLocale}, falling back to English.`);
 					this.currentLocale = 'en';

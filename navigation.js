@@ -447,7 +447,7 @@ function setupSettings() {
 			// 显示保存成功提示
 			const successMessage = document.createElement('div');
 			successMessage.className = 'save-success';
-			successMessage.textContent = i18n.t('settings.saveSuccess');
+			successMessage.textContent = i18n.t('settings.saved');
 			saveButton.parentNode.appendChild(successMessage);
 
 			// 2秒后移除提示

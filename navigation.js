@@ -505,18 +505,9 @@ function loadBookmarks() {
 function findBookmarkBar(root) {
 	if (!root || !root.children) return null;
 
-
-
 	const set = new Set();
 
 	root.children.forEach(child=>child.children.forEach(item=>set.add(item)));
-
-	console.log(set);
-
-	// 书签栏的id通常是"1"
-	let result = root.children.find(child => child.id === "1");
-
-	console.log(result);
 
 	return Array.from(set)
 }

@@ -505,18 +505,30 @@ function loadBookmarks() {
 function findBookmarkBar(root) {
 	if (!root || !root.children) return null;
 
+
+
+	const set = new Set();
+
+	root.children.forEach(child=>child.children.forEach(item=>set.add(item)));
+
+	console.log(set);
+
 	// 书签栏的id通常是"1"
-	return root.children.find(child => child.id === "1");
+	let result = root.children.find(child => child.id === "1");
+
+	console.log(result);
+
+	return Array.from(set)
 }
 
 function processBookmarkBar(bookmarkBar, container) {
-	if (!bookmarkBar || !bookmarkBar.children) return;
+	if (!bookmarkBar ) return;
 
 	const uncategorizedBookmarks = [];
 	const folders = [];
 
 	// 第一遍遍历：收集未分类书签和文件夹
-	bookmarkBar.children.forEach(item => {
+	bookmarkBar.forEach(item => {
 		if (item.url) {
 			// 直接在书签栏下的链接归为未分类
 			uncategorizedBookmarks.push(item);

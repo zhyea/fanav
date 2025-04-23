@@ -1,5 +1,5 @@
 // 导入 i18n 实例
-import { i18n } from './i18n/i18n.js';
+import {i18n} from './i18n/i18n.js';
 
 // 全局设置对象
 let appSettings = {
@@ -507,13 +507,13 @@ function findBookmarkBar(root) {
 
 	const set = new Set();
 
-	root.children.forEach(child=>child.children.forEach(item=>set.add(item)));
+	root.children.forEach(child => child.children.forEach(item => set.add(item)));
 
 	return Array.from(set)
 }
 
 function processBookmarkBar(bookmarkBar, container) {
-	if (!bookmarkBar ) return;
+	if (!bookmarkBar) return;
 
 	const uncategorizedBookmarks = [];
 	const folders = [];

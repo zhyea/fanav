@@ -30,6 +30,13 @@ export const ar = {
         placeholder: 'البحث في الإشارات المرجعية...'
     },
     bookmarks: {
+        import: 'استيراد',
+        import_file: 'استيراد الإشارات المرجعية (.zhx)',
+        import_success: 'تم الاستيراد بنجاح!',
+        import_fail: 'فشل الاستيراد. يرجى التحقق من الملف.',
+        import_merge: 'تم الدمج مع الفئة الحالية',
+        import_skip: 'تخطي الإشارات المرجعية المكررة',
+        share: 'مشاركة',
         title: 'متصفح الإشارات المرجعية',
         uncategorized: 'غير مصنف',
         categories: {

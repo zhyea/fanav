@@ -30,6 +30,13 @@ export const fr = {
 		placeholder: 'Rechercher des signets...'
 	},
 	bookmarks: {
+		import: 'Importer',
+		import_file: 'Importer des signets (.zhx)',
+		import_success: 'Importation réussie !',
+		import_fail: 'Échec de l\'importation. Veuillez vérifier le fichier.',
+		import_merge: 'Fusionné avec la catégorie existante',
+		import_skip: 'Signets en double ignorés',
+		share: 'Partager',
 		title: 'Navigateur de signets',
 		uncategorized: 'Non classé',
 		categories: {

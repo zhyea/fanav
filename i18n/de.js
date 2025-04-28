@@ -30,6 +30,13 @@ export const de = {
 		placeholder: 'Lesezeichen durchsuchen...'
 	},
 	bookmarks: {
+		import: 'Importieren',
+		import_file: 'Lesezeichen importieren (.zhx)',
+		import_success: 'Import erfolgreich!',
+		import_fail: 'Import fehlgeschlagen. Bitte überprüfen Sie die Datei.',
+		import_merge: 'Mit vorhandener Kategorie zusammengeführt',
+		import_skip: 'Doppelte Lesezeichen übersprungen',
+		share: 'Teilen',
 		title: 'Lesezeichen-Navigator',
 		uncategorized: 'Nicht kategorisiert',
 		categories: {

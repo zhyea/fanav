@@ -30,6 +30,13 @@ export const ko = {
 		placeholder: '북마크 검색...'
 	},
 	bookmarks: {
+		import: '가져오기',
+		import_file: '북마크 가져오기(.zhx)',
+		import_success: '가져오기 성공!',
+		import_fail: '가져오기에 실패했습니다. 파일을 확인해주세요.',
+		import_merge: '기존 카테고리와 병합',
+		import_skip: '중복 북마크 건너뛰기',
+		share: '공유',
 		title: '북마크 내비게이터',
 		uncategorized: '미분류',
 		categories: {

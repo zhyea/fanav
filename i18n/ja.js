@@ -30,6 +30,13 @@ export const ja = {
 		placeholder: 'ブックマークを検索...'
 	},
 	bookmarks: {
+		import: 'インポート',
+		import_file: 'ブックマークをインポート（.zhx）',
+		import_success: 'インポート成功！',
+		import_fail: 'インポートに失敗しました。ファイルを確認してください。',
+		import_merge: '既存のカテゴリとマージ',
+		import_skip: '重複したブックマークをスキップ',
+		share: '共有',
 		title: 'ブックマークナビゲーター',
 		uncategorized: '未分類',
 		categories: {

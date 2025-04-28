@@ -30,6 +30,13 @@ export const zhTW = {
 		placeholder: '搜尋書籤...'
 	},
 	bookmarks: {
+		import: '匯入',
+		import_file: '匯入書籤（.zhx）',
+		import_success: '匯入成功！',
+		import_fail: '匯入失敗，請檢查檔案。',
+		import_merge: '與現有分類合併',
+		import_skip: '略過重複書籤',
+		share: '分享',
 		title: '書籤導航',
 		uncategorized: '未分類',
 		categories: {

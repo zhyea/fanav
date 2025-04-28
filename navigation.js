@@ -605,21 +605,24 @@ function renderFolder(folder, container) {
 	folderIcon.className = 'folder-icon';
 	folderIcon.innerHTML = FOLDER_ICONS[folder.title] || getDefaultFolderIcon();
 
-	folderTitle.appendChild(folderIcon);
-	folderTitle.appendChild(document.createTextNode(i18n.t(folder.title)));
+	// 分类标题文本靠左
+	const folderText = document.createElement('span');
+	folderText.className = 'folder-title-text';
+	folderText.textContent = i18n.t(folder.title);
 
 	// 添加分享按钮
-	const shareBtn = document.createElement('button');
-	shareBtn.className = 'share-btn';
-	shareBtn.title = i18n.t('bookmarks.share') || 'Share';
-	shareBtn.setAttribute('aria-label', i18n.t('bookmarks.share') || 'Share');
-	shareBtn.innerHTML = `
-		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="currentColor" style="transform:scaleX(-1);vertical-align:middle;">
-			<path d="M6.598 5.013a.5.5 0 0 1 .646-.06l5 4a.5.5 0 0 1 0 .794l-5 4A.5.5 0 0 1 6 13.5V11H2.5A1.5 1.5 0 0 1 1 9.5v-3A1.5 1.5 0 0 1 2.5 5H6V2.5a.5.5 0 0 1 .598-.487zM6 6H2.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5H6v2.5l5-4-5-4V6z"/>
+	const shareIcon = document.createElement('span');
+	shareIcon.className = 'share-btn';
+	shareIcon.title = i18n.t('bookmarks.share') || 'Share';
+	shareIcon.setAttribute('aria-label', i18n.t('bookmarks.share') || 'Share');
+	shareIcon.style.display = 'inline-flex';
+	shareIcon.style.cursor = 'pointer';
+	shareIcon.innerHTML = `
+		<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" fill="#FFFFFF" style="vertical-align:middle;">
+			<path d="m8.5 4c.27614 0 .5.22386.5.5 0 .24545778-.17687704.4496079-.41012499.49194425l-.08987501.00805575h-3c-.77969882 0-1.420449.59488554-1.49313345 1.35553954l-.00686655.14446046v8c0 .7796706.59488554 1.4204457 1.35553954 1.4931332l.14446046.0068668h8c.7796706 0 1.4204457-.5949121 1.4931332-1.3555442l.0068668-.1444558v-1c0-.2761.2239-.5.5-.5.2454222 0 .4496.1769086.4919429.4101355l.0080571.0898645v1c0 1.325472-1.0315469 2.4100378-2.3356256 2.4946823l-.1643744.0053177h-8c-1.3254816 0-2.41003853-1.0315469-2.49468231-2.3356256l-.00531769-.1643744v-8c0-1.3254816 1.03153766-2.41003853 2.33562452-2.49468231l.16437548-.00531769zm4.768-.89136.0617.05301 4.4971 4.42118c.2099.20633.229.53775.0573.76685l-.0572.06544-4.4971 4.42258c-.3378.3322-.8869.1189-.9469-.3338l-.0053-.0823v-2.0955l-.2577.0232c-1.8003.1924-3.52574 1.0235-5.18729 2.5071-.38943.3478-.99194.019-.92789-.5063.49872-4.09021 2.58567-6.34463 6.14828-6.62742l.2246-.01511v-2.12975c0-.47977.5302-.73818.8904-.46918z"/>
 		</svg>
 	`;
-
-	shareBtn.addEventListener('click', function (e) {
+	shareIcon.addEventListener('click', function (e) {
 		e.stopPropagation();
 		const exportData = {
 			category: folder.title,
@@ -641,7 +644,11 @@ function renderFolder(folder, container) {
 			document.body.removeChild(a);
 		}, 100);
 	});
-	folderTitle.appendChild(shareBtn);
+
+	folderTitle.appendChild(folderIcon);
+	folderTitle.appendChild(folderText);
+	folderTitle.appendChild(shareIcon);
+	folderTitle.style.justifyContent = 'space-between';
 
 	folderElement.appendChild(folderTitle);
 

@@ -36,6 +36,13 @@ export const zh = {
 		placeholder: '搜索书签...'
 	},
 	bookmarks: {
+		import: '导入',
+		import_file: '导入书签（.zhx）',
+		import_success: '导入成功！',
+		import_fail: '导入失败，请检查文件。',
+		import_merge: '与已有分类合并',
+		import_skip: '跳过重复书签',
+		share: '分享',
 		title: '书签导航',
 		uncategorized: '未分类',
 		categories: {

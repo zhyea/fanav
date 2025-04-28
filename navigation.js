@@ -359,6 +359,15 @@ function setTheme(theme) {
 }
 
 function setupSettings() {
+	// 导入按钮和文件input声明只在此处
+	const importBtn = document.getElementById('importBookmarksBtn');
+	const importInput = document.getElementById('importFileInput');
+	if (importBtn && importInput) {
+		importBtn.textContent = i18n.t('bookmarks.import_file');
+		importBtn.addEventListener('click', () => importInput.click());
+		importInput.addEventListener('change', handleImportBookmarks);
+	}
+
 	const settingsButton = document.getElementById('settingsButton');
 	const settingsDrawer = document.getElementById('settingsDrawer');
 	const closeDrawer = document.getElementById('closeDrawer');
@@ -368,6 +377,7 @@ function setupSettings() {
 	const saveButton = document.getElementById('saveSettings');
 	const backgroundEnabled = document.getElementById('backgroundEnabled');
 	const refreshBackground = document.getElementById('refreshBackground');
+
 
 	if (!settingsButton || !settingsDrawer || !closeDrawer || !overlay) {
 		console.warn('Settings elements not found');
@@ -574,6 +584,13 @@ function showError(messageKey, ...args) {
 	}
 }
 
+// 安全的Base64编码（兼容中文）
+function base64EncodeUnicode(str) {
+	return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+		return String.fromCharCode('0x' + p1);
+	}));
+}
+
 function renderFolder(folder, container) {
 	if (!folder.children || folder.children.length === 0) return;
 
@@ -590,6 +607,42 @@ function renderFolder(folder, container) {
 
 	folderTitle.appendChild(folderIcon);
 	folderTitle.appendChild(document.createTextNode(i18n.t(folder.title)));
+
+	// 添加分享按钮
+	const shareBtn = document.createElement('button');
+	shareBtn.className = 'share-btn';
+	shareBtn.title = i18n.t('bookmarks.share') || 'Share';
+	shareBtn.setAttribute('aria-label', i18n.t('bookmarks.share') || 'Share');
+	shareBtn.innerHTML = `
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16" fill="currentColor" style="transform:scaleX(-1);vertical-align:middle;">
+			<path d="M6.598 5.013a.5.5 0 0 1 .646-.06l5 4a.5.5 0 0 1 0 .794l-5 4A.5.5 0 0 1 6 13.5V11H2.5A1.5 1.5 0 0 1 1 9.5v-3A1.5 1.5 0 0 1 2.5 5H6V2.5a.5.5 0 0 1 .598-.487zM6 6H2.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5H6v2.5l5-4-5-4V6z"/>
+		</svg>
+	`;
+
+	shareBtn.addEventListener('click', function (e) {
+		e.stopPropagation();
+		const exportData = {
+			category: folder.title,
+			bookmarks: folder.children.filter(child => child.url).map(child => ({
+				title: child.title,
+				url: child.url
+			}))
+		};
+		const json = JSON.stringify(exportData);
+		const base64 = base64EncodeUnicode(json);
+		const blob = new Blob([base64], {type: 'text/plain'});
+		const a = document.createElement('a');
+		a.href = URL.createObjectURL(blob);
+		a.download = `${folder.title || 'bookmarks'}.zhx`;
+		document.body.appendChild(a);
+		a.click();
+		setTimeout(() => {
+			URL.revokeObjectURL(a.href);
+			document.body.removeChild(a);
+		}, 100);
+	});
+	folderTitle.appendChild(shareBtn);
+
 	folderElement.appendChild(folderTitle);
 
 	// 创建书签列表容器
@@ -664,6 +717,78 @@ const DEFAULT_ICON = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="htt
 
 function getDefaultIcon() {
 	return DEFAULT_ICON;
+}
+
+// 处理导入书签功能
+async function handleImportBookmarks(e) {
+	const file = e.target.files[0];
+	if (!file) return;
+	const reader = new FileReader();
+	reader.onload = async function (evt) {
+		try {
+			let base64 = evt.target.result;
+			if (base64.startsWith('data:')) base64 = base64.split(',')[1];
+			const jsonStr = decodeURIComponent(Array.prototype.map.call(atob(base64), c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+			const data = JSON.parse(jsonStr);
+			if (!data || !data.category || !Array.isArray(data.bookmarks)) throw new Error('Invalid format');
+
+			const importedCategory = data.category;
+			const importedBookmarks = data.bookmarks;
+
+			chrome.bookmarks.getTree(async (tree) => {
+				const bar = findBookmarkBar(tree[0]);
+				if (!bar) throw new Error('No bookmark bar');
+
+				let targetFolder = bar.find(f => f.title === importedCategory && f.children);
+				if (!targetFolder) {
+					// 新建分类
+					chrome.bookmarks.create({
+						parentId: bar[0].parentId,
+						title: importedCategory
+					}, function (newFolder) {
+						insertBookmarksToFolder(newFolder.id, importedBookmarks, [], true);
+						showImportMessage(i18n.t('bookmarks.import_success'));
+					});
+				} else {
+					// 合并分类
+					const existingUrls = new Set();
+					targetFolder.children.forEach(b => b.url && existingUrls.add(b.url));
+					const deduped = importedBookmarks.filter(b => b.url && !existingUrls.has(b.url));
+					if (deduped.length === 0) {
+						showImportMessage(i18n.t('bookmarks.import_skip'));
+						return;
+					}
+					insertBookmarksToFolder(targetFolder.id, deduped, Array.from(existingUrls), false);
+					showImportMessage(i18n.t('bookmarks.import_merge'));
+				}
+			});
+		} catch (err) {
+			showImportMessage(i18n.t('bookmarks.import_fail'));
+		}
+	};
+	reader.readAsText(file);
+}
+
+function insertBookmarksToFolder(folderId, bookmarks, existingUrls, isNewFolder) {
+	bookmarks.forEach(b => {
+		if (!b.url || existingUrls.includes(b.url)) return;
+		chrome.bookmarks.create({
+			parentId: folderId,
+			title: b.title,
+			url: b.url
+		});
+	});
+	setTimeout(() => loadBookmarks(), 500);
+}
+
+function showImportMessage(msg) {
+	const importBtn = document.getElementById('importBookmarksBtn');
+	if (!importBtn) return;
+	let tip = document.createElement('div');
+	tip.className = 'import-success';
+	tip.textContent = msg;
+	importBtn.parentNode.appendChild(tip);
+	setTimeout(() => tip.remove(), 2000);
 }
 
 function setupSearch() {

@@ -36,6 +36,13 @@ export const en = {
 		placeholder: 'Search bookmarks...'
 	},
 	bookmarks: {
+		import: 'Import',
+		import_file: 'Import Bookmarks (.zhx)',
+		import_success: 'Import successful!',
+		import_fail: 'Import failed. Please check the file.',
+		import_merge: 'Merged with existing category',
+		import_skip: 'Skipped duplicate bookmarks',
+		share: 'Share',
 		title: 'Bookmark Navigator',
 		uncategorized: 'Uncategorized',
 		categories: {
